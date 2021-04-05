@@ -52,8 +52,12 @@ export const mergeSingleSchema: MergerFn = ({ rawSources, typeDefs, resolvers, t
     }
   }
   schema.extensions = schema.extensions || {};
-  Object.defineProperty(schema.extensions, 'sourceMap', {
-    get: () => new Map([[source, schema]]),
-  });
+
+  if (!schema.extensions.sourceMap) {
+    Object.defineProperty(schema.extensions, 'sourceMap', {
+      get: () => new Map([[source, schema]]),
+    });
+  }
+
   return schema;
 };

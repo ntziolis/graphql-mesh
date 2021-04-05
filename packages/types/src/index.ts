@@ -32,6 +32,7 @@ export type GetMeshSourceOptions<THandlerConfig, TIntrospectionCache = never> = 
 
 // Handlers
 export interface MeshHandler<TContext = any> {
+  wrapOnly?: boolean;
   getMeshSource: () => Promise<MeshSource<TContext>>;
 }
 

@@ -24,6 +24,7 @@ export interface GraphQLHandlerIntrospection {
 }
 
 export default class GraphQLHandler implements MeshHandler {
+  wrapOnly = true;
   private config: YamlConfig.GraphQLHandler;
   private baseDir: string;
   private cache: KeyValueCache<any>;

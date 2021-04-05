@@ -44,6 +44,41 @@ export async function getMesh(
 
       const { wrapTransforms, noWrapTransforms } = groupTransforms(apiSource.transforms);
 
+      if (apiSource.handler.wrapOnly && noWrapTransforms?.length) {
+        const rawSource = {
+          name: apiName,
+          contextBuilder: source.contextBuilder || null,
+          schema: apiSchema,
+          executor: source.executor,
+          subscriber: source.subscriber,
+          transforms: wrapTransforms,
+          contextVariables: source.contextVariables || [],
+          handler: apiSource.handler,
+          batch: 'batch' in source ? source.batch : true,
+        };
+
+        const graphqlSchema = await options.merger({
+          rawSources: [rawSource],
+          cache,
+          pubsub,
+          typeDefs: [],
+          resolvers: {},
+          transforms: noWrapTransforms,
+        });
+
+        rawSources.push({
+          name: apiName,
+          contextBuilder: source.contextBuilder || null,
+          schema: graphqlSchema,
+          transforms: [],
+          contextVariables: source.contextVariables || [],
+          handler: null,
+          batch: 'batch' in source ? source.batch : true,
+        });
+
+        return;
+      }
+
       if (noWrapTransforms?.length) {
         apiSchema = applySchemaTransforms(apiSchema, { schema: apiSchema }, null, noWrapTransforms);
       }
