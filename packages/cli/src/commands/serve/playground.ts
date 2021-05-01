@@ -8,13 +8,15 @@ import { handleFatalError } from '../../handleFatalError';
 export const playgroundMiddlewareFactory = ({
   baseDir,
   exampleQuery,
+  hostname,
+  port,
   graphqlPath,
-  serverUrl,
 }: {
   baseDir: string;
   exampleQuery: string;
+  hostname: string;
+  port: string | number;
   graphqlPath: string;
-  serverUrl: string;
 }): RequestHandler => {
   let defaultQuery$: Promise<string>;
   return function (req: Request, res: Response, next) {
@@ -71,7 +73,7 @@ export const playgroundMiddlewareFactory = ({
           renderGraphiQL({
             defaultQuery,
             endpoint: graphqlPath,
-            subscriptionsEndpoint: `${serverUrl}${graphqlPath}`,
+            subscriptionsEndpoint: `ws://${hostname}:${port}${graphqlPath}`,
           })
       );
     });
